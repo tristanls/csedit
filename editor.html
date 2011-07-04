@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CoffeeScript Editor</title>
+    <link href="less/csedit.less" rel="stylesheet/less" type="text/css">
+    <script src="scripts/less-1.1.0.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="contents">
+      <div class="code">
+        <div id="source_wrap">
+          <textarea id="source" rows="100" spellcheck="false">alert "Hello CoffeeScript!"</textarea>
+        </div>
+        <div id="results_wrap">
+          <pre id="results">alert("Hello CoffeeScript!");</pre>
+        </div>
+      </div>
+    </div>
+    <script src="coffee/console.coffee" type="text/coffeescript"></script>
+    <script src="scripts/jquery-1.4.2.js" type="text/javascript"></script>
+    <script src="scripts/coffee-script.js" type="text/javascript"></script>
+  </body>
+</html>

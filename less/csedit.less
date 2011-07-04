@@ -1,0 +1,126 @@
+// Library methods
+
+.background_gradient_top_to_bottom ( @top_color: #000, @bottom_color: #fff ) {
+  background: @bottom_color;
+  background: -webkit-gradient( linear, left top, left bottom, from( @top_color ), to( @bottom_color ) );
+  background: -webkit-linear_gradient( top, from( @top_color ), to( @bottom_color ) );
+  background: -moz-linear-gradient( top, @top_color 0%, @bottom_color 100% );
+}
+
+.box_shadow( @x: 5px, @y: 5px, @blur: 6px, @spread: 6px, @color: black ) {
+  -webkit-box-shadow: @arguments;
+  -mox-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+
+.rounded_corners( @radius: 5px ) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+// Custom methods
+
+.code_font() {
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
+	font-size: 12px;
+	line-height: 18px;
+	word-wrap: break-word;
+}
+
+.source_result_common() {
+	color: #def;
+	margin: 5px 0 20px;
+	background: transparent;
+	outline: none;
+}
+
+.source_wrap_and_result_common() {
+	bottom: 15px;
+	height: auto;
+	left: 10px;
+	margin-bottom: 0;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	width: auto;
+}
+
+// Classes
+
+.code {
+	.box_shadow( 0, 0, 0, 0, 0 );
+	.code_font();
+	background: #181a3a url(../images/banding.png);
+	border: 2px solid #555;
+  bottom: 15px;
+	cursor: text;
+  left: 15px;
+	padding: 0;
+	position: absolute;
+  right: 15px;
+	top: 15px;
+	zoom: 1;
+}
+
+.contents {
+	.background_gradient_top_to_bottom( #fafafa, #eaeaea );
+	.box_shadow( 0, 3px, 5px, 0, rgba( 0, 0, 0, 0.2 ) );
+	.rounded_corners( 3px );
+	border: 1px solid #aaa;
+	bottom: 30px;
+	display: block;
+	height: auto;
+	left: 40px;
+	margin-left: -1px;
+	opacity: 0.97;
+	right: 40px;
+	top: 90px;
+	padding: 0;
+	position: fixed;
+	width: auto;
+}
+
+body {
+	font-family: "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif !important;
+}
+
+pre {
+	.code_font();
+}
+
+textarea {
+	.code_font();
+}
+
+#results {
+	.source_result_common();
+	.source_wrap_and_result_common();
+	border-left-color: #555;
+	left: 50%;
+	overflow-y: auto;
+	text-transform: none;
+}
+
+#results_wrap {
+  white-space: pre; 
+}
+
+#source {
+	.source_result_common();
+	border: 0;
+	float: left;
+	height: 100%;
+	overflow-y: auto;
+	padding-left: 5px;
+	resize: none;
+	width: 100%;
+}
+
+#source_wrap {
+	.source_wrap_and_result_common();
+	float: left;
+	margin-left: 5px;
+	right: 50%;
+	width: 47%;
+}
