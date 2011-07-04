@@ -27,6 +27,8 @@ lineNumbersAndCompileSource = ( compile = true )->
   columnsPerLine = parseInt columnsPerLine
 
   originalSource = $( '#source' ).val()
+  if originalSource.length is 0
+    $( '.file_name' ).text ''
   source = originalSource.split( '\n' )
   totalLines = source.length
   totalLinesWidth = ( '' + totalLines ).length
@@ -118,7 +120,9 @@ window.handleFileSelect = ( evt ) ->
     window.loadConsole evt.target.result
     false
 
-  reader.readAsText files[ 0 ]
+  file = files[ 0 ]
+  $( '.file_name' ).text file.name
+  reader.readAsText file
 
 window.handleDragOver = ( evt ) ->
   evt.stopPropagation()
