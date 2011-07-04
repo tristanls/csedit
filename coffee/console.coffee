@@ -1,6 +1,29 @@
+# Add line numbers to the source editor
+# But return source without line numbers for compiling
+lineNumbersAndCompileSource = ->
+  LINE_NUMBER = /^\s*\d+\.\s/
+  originalSource = $( '#source' ).val()
+  source = originalSource.split( '\n' )
+  totalLines = source.length
+  totalLinesWidth = ( '' + totalLines ).length
+  
+  sourceWithoutLineNumbers =
+    for line, i in source
+      do ( line ) ->
+        line = line.replace LINE_NUMBER, ''
+  compileSource sourceWithoutLineNumbers.join '\n'
+
+  sourceWithLineNumbers = 
+    for line, i in sourceWithoutLineNumbers
+      do ( line ) -> 
+        bufferWidth = totalLinesWidth - ( ( i + 1 ) + '' ).length
+        buffer = ( ' ' for index in [0...bufferWidth] ).join ''
+        buffer + ( i + 1 ) + '. ' + line
+  sourceWithLineNumbers = sourceWithLineNumbers.join '\n'
+  $( '#source' )[ 0 ].value = sourceWithLineNumbers
+
 # Setup the compilation function, to run when you stop typing.
-compileSource = ->
-  source = $( '#source' ).val()
+compileSource = ( source ) ->
   window.compiledJS = ''
   try
     window.compiledJS = CoffeeScript.compile source, bare: on
@@ -14,7 +37,7 @@ compileSource = ->
     $( '#error' ).text( error.message ).show()
 
 # Listen for keypresses and recompile.
-$( '#source' ).keyup -> compileSource()
+$( '#source' ).keyup -> lineNumbersAndCompileSource()
 
 # Eval the compiled js.
 # TODO: see if this is needed...
@@ -53,4 +76,4 @@ $( '#source' )
   .bind( 'drop', window.handleFileSelect, false )
 
 # By default, compile what's in the source window.
-compileSource()
+lineNumbersAndCompileSource()
