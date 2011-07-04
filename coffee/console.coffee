@@ -19,8 +19,13 @@ $( '#source' ).scroll ->
 # Add line numbers to the source editor
 # But return source without line numbers for compiling
 lineNumbersAndCompileSource = ->
-  #LINE_NUMBER = /^\s*\d+\.\s/
-  #DELETE_LINE = /^\s*\d+\.$/
+  testStringWidth = $( '#font_test' )[ 0 ].clientWidth
+  charsInTest = $( '#font_test' )[ 0 ] 
+  fontWidth = testStringWidth / 62
+  # -5 is due to textarea left padding of 5px
+  columnsPerLine = ( $( '#source' )[ 0 ].clientWidth - 5 ) / fontWidth
+  columnsPerLine = parseInt columnsPerLine
+
   originalSource = $( '#source' ).val()
   source = originalSource.split( '\n' )
   totalLines = source.length
@@ -28,12 +33,29 @@ lineNumbersAndCompileSource = ->
   
   compileSource source.join '\n'
   
-  lineNumbers =
-    for line, i in source
-      do ( line ) -> 
-        bufferWidth = totalLinesWidth - ( ( i + 1 ) + '' ).length
-        buffer = ( ' ' for index in [0...bufferWidth] ).join ''
-        buffer + ( i + 1 ) + '.'
+  lineNumbers = []
+  for line, i in source
+    do ( line ) -> 
+      lineIndex = i + 1
+      lineIndexWidth = ( lineIndex + '' ).length
+      bufferWidth = totalLinesWidth - lineIndexWidth
+      buffer = ( ' ' for index in [ 0...bufferWidth ] ).join ''
+      lineNumber = buffer + lineIndex + '.'
+      
+      if line.length > columnsPerLine
+        lineCount = parseInt( line.length / columnsPerLine ) + 1
+        multiple = [ lineNumber ]
+         
+        for count in [ 1...lineCount ]
+          do ->
+            multiple.push ( ( ' ' for index in [ 0...totalLinesWidth ] ).join '' )
+              
+        for ln in multiple
+          do ( ln ) ->
+            lineNumbers.push ln
+      else
+        lineNumbers.push lineNumber
+        
   lineNumbers = lineNumbers.join '\n'
   $( '#source_line_numbers' )[ 0 ].value = lineNumbers
 
@@ -50,6 +72,20 @@ compileSource = ( source ) ->
     $( '#error' ).hide()
   catch error
     capture = error.message.match /error on line (\d+)\:/i
+    errorLine = capture[ 1 ]
+    source = source.split '\n'
+    # remember that errorLine starts with 1
+    # determine the start of error selection
+    sourcePriorToError = for index in [ 0...( errorLine - 1 ) ]
+      source[ index ]
+
+    sourcePriorToError = sourcePriorToError.join '\n'
+    selectionStart = sourcePriorToError.length
+
+    selectionEnd = selectionStart + source[ errorLine - 1 ].length
+
+    #setSelectionRange $( '#source' )[ 0 ], selectionStart, selectionEnd
+    
     $( '#error' ).text( error.message ).show()
 
 # Listen for keypresses and recompile.
