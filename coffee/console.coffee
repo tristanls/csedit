@@ -18,7 +18,7 @@ $( '#source' ).scroll ->
 
 # Add line numbers to the source editor
 # But return source without line numbers for compiling
-lineNumbersAndCompileSource = ->
+lineNumbersAndCompileSource = ( compile = true )->
   testStringWidth = $( '#font_test' )[ 0 ].clientWidth
   charsInTest = $( '#font_test' )[ 0 ] 
   fontWidth = testStringWidth / 62
@@ -31,7 +31,8 @@ lineNumbersAndCompileSource = ->
   totalLines = source.length
   totalLinesWidth = ( '' + totalLines ).length
   
-  compileSource source.join '\n'
+  if compile is true 
+    compileSource source.join '\n'
   
   lineNumbers = []
   for line, i in source
@@ -101,7 +102,7 @@ evalJS = ->
 # Load the console with a string of CoffeeScript.
 window.loadConsole = ( coffee ) ->
   $( '#source' ).val coffee
-  compileSource()
+  lineNumbersAndCompileSource()
   false
   
 # Add drag and drop functionality to the console
@@ -126,6 +127,10 @@ window.handleDragOver = ( evt ) ->
 $( '#source' )
   .bind( 'dragover', window.handleDragOver, false )
   .bind( 'drop', window.handleFileSelect, false )
+
+# Add recalculating line numbers when window is resized
+window.onresize = ->
+  lineNumbersAndCompileSource false
 
 # By default, compile what's in the source window.
 lineNumbersAndCompileSource()
