@@ -28,6 +28,29 @@ window.loadConsole = ( coffee ) ->
   $( '#source' ).val coffee
   compileSource()
   false
+  
+# Add drag and drop functionality to the console
+window.handleFileSelect = ( evt ) ->
+  evt.stopPropagation()
+  evt.preventDefault()
+
+  files = evt.originalEvent.dataTransfer.files
+  
+  reader = new FileReader()
+
+  reader.onload = ( evt ) ->
+    window.loadConsole evt.target.result
+    false
+
+  reader.readAsText files[ 0 ]
+
+window.handleDragOver = ( evt ) ->
+  evt.stopPropagation()
+  evt.preventDefault()
+
+$( '#source' )
+  .bind( 'dragover', window.handleDragOver, false )
+  .bind( 'drop', window.handleFileSelect, false )
 
 # By default, compile what's in the source window.
 compileSource()
