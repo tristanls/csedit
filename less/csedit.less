@@ -21,9 +21,11 @@
 
 // Custom methods
 
+@code_font_size: 12px;
+
 .code_font() {
 	font-family: Monaco, Consolas, "Lucida Console", monospace;
-	font-size: 12px;
+	font-size: @code_font_size;
 	line-height: 18px;
 	word-wrap: break-word;
 }
@@ -132,10 +134,31 @@ textarea {
 	width: 100%;
 }
 
+#source_line_numbers {
+	.source_result_common();
+	border: 0;
+	height: 100%;
+	overflow-y: hidden;
+	padding-left: 0;
+	resize: none;
+	width: 100%;
+}
+
+#source_line_numbers_wrap {
+	bottom: 15px;
+	float: left;
+  left: 10px;
+  margin-left: 5px;
+	position: absolute;
+	top: 10px;
+	width: @code_font_size * 3;
+}
+
 #source_wrap {
 	.source_wrap_and_result_common();
 	float: left;
+	left: ( @code_font_size * 3.5 ); 
 	margin-left: 5px;
 	right: 50%;
-	width: 47%;
+	width: 44%;
 }
