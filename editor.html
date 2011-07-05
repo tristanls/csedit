@@ -8,7 +8,10 @@
   <body>
     <div id="error"></div>
     <div class="contents">
-      <div class="file_name"></div>
+      <div class="file_menu">
+        <div class="file_name"></div>
+        <input class="save_button" type="button" value="save"/>
+      </div> 
       <div class="code">
         <div id="source_line_numbers_wrap">
           <textarea id="source_line_numbers" rows="100" spellcheck="false" readonly>  1.</textarea>
@@ -22,6 +25,8 @@
       </div>
     </div>
     <div id="font_test">
+      0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
+      0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<br>
       0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
     </div>
     <script src="coffee/console.coffee" type="text/coffeescript"></script>
