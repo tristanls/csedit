@@ -16,39 +16,29 @@ $( '#source' ).scroll ->
     $( '#source' ).scrollTop() )
   false
 
-# Find the nearest function declaration preceeding or at cursor position line
-findFunctionDeclaration = ( cursorPosition, source ) ->
+# Find the nearest variable assignment preceeding or at cursor position line
+findVariableAssignment = ( cursorPosition, source ) ->
   # Find the end of the cursor position line
   endIndex = source.indexOf '\n', cursorPosition
   if endIndex is -1
     endIndex = source.length
   sourcePrior = source.substring 0, endIndex
   
-  # Match the nearest function declaration
-  results = sourcePrior.match /\w+\s*=.*->[^\/\[]/g
+  # Match the nearest variable assignment that is not a comment
+  results = sourcePrior.match /\n[^\#]*\w+\s*=\s*\w+[^\/\[\(]/g
   if results is null
     return 0
   nearestResult = results[ results.length - 1]
-  matches = nearestResult.match /(\w+)\s*=\s*\(?(.*)\)?\s*->/
-  functionName = matches[ 1 ]
-  params = matches[ 2 ]
-  params = params.replace ')', ''
-  params = params.split ','
-  functionParams = 
-    for p in params
-      do ->
-        ( p.match /\s*(\w+)\s*/ )[ 1 ]
+  matches = nearestResult.match /(\w+)\s*=\s*(\w+)[^\/\[]/
+  leftSideName = matches[ 1 ]
+  rightSideName = matches[ 2 ]
 
-  # We now have a function name and function params, find them in results
+  # We now have a left side and right side of assignment, find them in results
   compiledCode = $( '#results' ).text()
   # find position of function we are looking for
-  pattern = functionName + "\\s*=\\s*function\\("
-  for functionParam in functionParams
-    pattern += functionParam + ",?\\s*"
-  pattern += "\\)" 
+  pattern = leftSideName + "\\s=\\s" + rightSideName
   p = new RegExp( pattern, "g" );
   functionCode = compiledCode.match p
-  console.log 'functionCode: ' + functionCode
   compiledLocation = compiledCode.indexOf functionCode
   return compiledLocation
 
@@ -104,8 +94,7 @@ lineNumbersAndCompileSource = ( compile = true ) ->
   $( '#source_line_numbers' )[ 0 ].value = lineNumbers
 
   # Scroll compiled code section
-  compiledPosition = findFunctionDeclaration cursorPosition, originalSource
-  console.log 'compiledPosition: ' + compiledPosition
+  compiledPosition = findVariableAssignment cursorPosition, originalSource
   
   # -5 is due to textarea left padding of 5px
   columnsPerCompiledLine = ( $( '#results' )[ 0 ].clientWidth - 5 ) / fontWidth
@@ -126,7 +115,6 @@ lineNumbersAndCompileSource = ( compile = true ) ->
     if counterPosition > compiledPosition
       break
   
-  console.log 'lineNumber: ' + lineNumber
   # lineNumber has the number of lines we need to scroll the compiled code
   $( '#results' ).scrollTop ( lineNumber * fontHeight )  
 
